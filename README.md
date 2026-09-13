@@ -1,12 +1,12 @@
 # Real-Time Hand Gesture Recognition & Computer Vision-Based Game Controller
 
-An end-to-end Computer Vision and Machine Learning system that captures 21 3D hand landmarks via webcam, normalizes spatial coordinates, extracts 90 engineered geometric and temporal features, trains and benchmarks multiple ML classifiers (KNN, SVM, Random Forest, Multi-Layer Perceptron, XGBoost), deploys real-time gesture control with temporal sliding-window smoothing, and visualizes gameplay telemetry in a Streamlit dashboard.
+An end-to-end Computer Vision and Machine Learning system that captures 21 3D hand landmarks via webcam, normalizes spatial coordinates, extracts 90 engineered features, trains and benchmarks multiple ML classifiers (KNN, SVM, Random Forest, Multi-Layer Perceptron, XGBoost), and deploys real-time gesture-based game control with safety handling and gameplay telemetry.
 
 ---
 
 ## 📌 Problem Statement
 
-Traditional keyboard-based gaming controls can be limiting or unintuitive for certain interactive arcade games such as *Hill Climb Racing*. While raw MediaPipe demos demonstrate landmark visualization, they lack robust machine learning pipelines, feature engineering, latency optimization, confidence safety thresholds, and gameplay telemetry analytics. This project builds a production-grade ML pipeline that translates real-time hand gestures into responsive, safe, and logged vehicle controls.
+Traditional keyboard-based gaming controls can be limiting or unintuitive for certain interactive arcade games such as *Hill Climb Racing*. While raw MediaPipe demos demonstrate landmark visualization, they lack robust machine learning pipelines, feature engineering, latency optimization, confidence safety thresholds, and gameplay telemetry analytics. This project builds an end-to-end ML pipeline that translates real-time hand gestures into responsive, safe, and logged vehicle controls.
 
 ---
 
@@ -14,34 +14,36 @@ Traditional keyboard-based gaming controls can be limiting or unintuitive for ce
 
 ```
 Webcam Frame (OpenCV)
-       │
-       ▼
-MediaPipe Hands Detection (21 3D Landmarks)
-       │
-       ▼
-Spatial Preprocessing (Wrist Translation & Palm Scale Normalization)
-       │
-       ▼
-Feature Engineering (90 Features: Distances, Joint Angles, Palm Tilt Normal)
-       │
-       ▼
-Real-Time Model Inference (Multi-Layer Perceptron / XGBoost / RF)
-       │
-       ▼
-Confidence Thresholding (< 0.65 -> Fallback to NEUTRAL)
-       │
-       ▼
-Temporal Sliding-Window Smoothing (Majority Voting over 5 frames)
-       │
-       ├─────────────────────────────────┐
-       ▼                                 ▼
-OS Keyboard Control (pynput)   2D Vehicle Physics Demo (OpenCV)
-       │                                 │
-       └────────────────┬────────────────┘
-                        ▼
-            Telemetry Logging & Storage (CSV)
-                        │
-                        ▼
+        │
+        ▼
+MediaPipe Hands Detection
+(21 3D Hand Landmarks)
+        │
+        ▼
+Spatial Preprocessing
+(Wrist Translation & Palm Scale Normalization)
+        │
+        ▼
+Feature Engineering
+(90 Geometric Features)
+        │
+        ▼
+ML Model Inference
+(Best Model: MLP)
+        │
+        ▼
+Gesture Prediction
+(ACCELERATE / BRAKE / NEUTRAL)
+        │
+        ├──────────────────────────┐
+        ▼                          ▼
+Keyboard Game Control       2D Vehicle Simulator
+        │                          │
+        └────────────┬─────────────┘
+                     ▼
+          Telemetry Logging (CSV)
+                     │
+                     ▼
           Streamlit Analytics Dashboard
 ```
 
@@ -51,9 +53,9 @@ OS Keyboard Control (pynput)   2D Vehicle Physics Demo (OpenCV)
 
 - **Languages & Frameworks:** Python 3.11+, OpenCV, MediaPipe, NumPy, Pandas, Scikit-learn, XGBoost, Streamlit, PyYAML, pynput, Pytest, Matplotlib, Seaborn.
 - **3 Gesture Classes:** `ACCELERATE`, `BRAKE`, `NEUTRAL`.
-- **Feature Engineering:** 90 engineered features including 63 normalized relative coordinates, 5 inter-fingertip distances, 5 fingertip-to-wrist distances, 5 finger extension distances, 7 inter-joint angles, and 5 palm normal tilt orientation parameters.
-- **Multi-Model Benchmark:** Automated training and K-Fold Stratified Cross-Validation across KNN, SVM, Random Forest, MLP, and XGBoost.
-- **Real-Time Safety & Smoothing:** 5-frame temporal sliding window majority voting, confidence thresholding fallback to `NEUTRAL`, and emergency key-release safety hooks on application shutdown or hand loss.
+- **Feature Engineering:** 90 engineered geometric features including normalized relative coordinates, inter-fingertip distances, fingertip-to-wrist distances, finger extension distances, joint angles, and palm orientation features.
+- **Multi-Model Benchmark:** Automated training and evaluation across KNN, SVM, Random Forest, MLP, and XGBoost.
+- **Real-Time Safety:** Responsive gesture-to-key control with confidence handling, safe key-release behavior, and automatic release on application shutdown or hand loss.
 - **Integrated Fallback Simulator:** Built-in 2D Hill Climb vehicle physics engine rendered directly in OpenCV canvas.
 - **Telemetry & Dashboard:** Real-time logging of prediction confidence, inference latency, reaction delay, FPS, and interactive Streamlit analytics.
 
@@ -77,11 +79,7 @@ Gesture-Game-Controller/
 │
 ├── data/
 │   ├── raw/
-│   │   └── gestures.csv        # Collected / generated raw landmark dataset
-│   ├── processed/
-│   │   └── processed_features.csv # 90-feature engineered dataset
-│   └── telemetry/
-│       └── session_telemetry.csv  # Real-time frame telemetry log
+│       └── gestures.csv        # Collected / generated raw landmark dataset
 │
 ├── models/
 │   ├── best_model.pkl          # Trained best performing classifier
@@ -97,10 +95,9 @@ Gesture-Game-Controller/
 │   ├── eda_correlation_heatmap.png
 │   ├── eda_pca_separability.png
 │   ├── model_comparison.csv    # Benchmark metrics comparison table
-│   ├── model_comparison.png    # F1-Score vs Latency comparison chart
+│   ├── model_comparison.png    # Model performance comparison chart
 │   ├── confusion_matrix.png    # Best model confusion matrix
 │   ├── classification_report.txt
-│   └── resume_metrics.txt      # Actual benchmark resume metrics
 │
 ├── scripts/
 │   └── generate_sample_data.py # Synthetic landmark data generator for offline testing
@@ -111,10 +108,11 @@ Gesture-Game-Controller/
 │   ├── preprocessing.py        # Spatial translation & scale normalizer
 │   ├── feature_engineering.py  # 90-feature engineering module
 │   ├── exploratory_data_analysis.py # EDA script generator
-│   ├── model_training.py       # Multi-model training & CV trainer
+│   ├── model_training.py       # Multi-model training
 │   ├── model_evaluation.py     # Evaluation metrics & visualization exporter
-│   ├── gesture_predictor.py    # Inference engine with smoothing & thresholding
+│   ├── gesture_predictor.py    # Real-time gesture inference and confidence handling
 │   ├── game_controller.py      # Safe pynput keyboard controller
+│   ├── chrome_game_controller.py  # Browser game keyboard controller
 │   ├── game_simulator.py       # 2D Hill Climb vehicle physics simulator
 │   ├── telemetry.py            # Real-time telemetry logger
 │   └── analytics.py            # Telemetry metrics analyzer
@@ -137,7 +135,7 @@ Ensure Python 3.11 is installed on Windows.
 ### 2. Create Virtual Environment & Install Dependencies
 ```powershell
 # Create virtual environment
-py -3.11 -m venv venv
+py -3.11 -m venv .venv
 
 # Activate virtual environment (Windows PowerShell)
 .\venv\Scripts\Activate.ps1
@@ -159,7 +157,7 @@ python collect_data.py --gesture NEUTRAL --samples 1000
 *Note: Press `SPACE` to toggle recording on/off. Press `Q` or `ESC` to save and exit.*
 
 #### Bootstrap / Offline Data Generation (Optional for CI/Testing)
-If webcam data is not immediately collected, generate 2,500 synthetic landmark samples:
+If webcam data is not immediately collected, generate 500 synthetic landmark samples for offline testing:
 ```powershell
 python scripts/generate_sample_data.py --samples 500
 ```
@@ -174,13 +172,13 @@ Outputs EDA charts (`eda_class_distribution.png`, `eda_correlation_heatmap.png`,
 ```powershell
 python train.py
 ```
-This script trains **KNN**, **SVM**, **Random Forest**, **Multi-Layer Perceptron**, and **XGBoost** with 5-Fold Stratified Cross-Validation, benchmarks inference latency, saves the best model to `models/best_model.pkl`, and exports reports to `reports/`.
+This script trains KNN, SVM, Random Forest, Multi-Layer Perceptron, and XGBoost, evaluates their performance, saves the best model to `models/best_model.pkl`, and exports reports to `reports/`.
 
 ### Step 4: Run Real-Time Gesture Control Application
 ```powershell
 python app.py
 ```
-Displays the real-time webcam HUD overlay, hand landmarks, predicted gesture, confidence score, FPS, and launches the live 2D Hill Climb Vehicle Simulator window. Press `Q` or `ESC` to quit.
+Captures hand gestures in real time, displays the webcam HUD with landmarks, predicted gesture, confidence score, and FPS, and sends the corresponding keyboard input to the game controller. The application also supports the integrated 2D vehicle simulator for local testing. Press `Q` or `ESC` to quit safely.
 
 ### Step 5: Launch Streamlit Performance Analytics Dashboard
 ```powershell
@@ -197,50 +195,19 @@ py -3.11 -m pytest -v tests/
 
 ## 📈 Model Comparison & Empirical Results
 
-Actual metrics achieved during pipeline execution on 2,500 samples across 5 gesture classes:
+Final benchmark results on the cleaned three-class dataset containing 3,000 samples.
 
-| Model | Accuracy | Macro F1 | Weighted F1 | 5-Fold CV F1 | Latency (ms/sample) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Multi-Layer Perceptron (Best)** | **100.00%** | **1.0000** | **1.0000** | **1.0000** | **0.0041 ms** |
-| **Random Forest** | 100.00% | 1.0000 | 1.0000 | 1.0000 | 0.0195 ms |
-| **XGBoost** | 99.80% | 0.9980 | 0.9980 | 0.9990 | 0.0073 ms |
-| **K-Nearest Neighbors** | 100.00% | 1.0000 | 1.0000 | 1.0000 | 0.0451 ms |
-| **Support Vector Machine** | 100.00% | 1.0000 | 1.0000 | 1.0000 | 0.0464 ms |
+| Model | Accuracy | F1 Score |
+| :--- | :---: | :---: |
+| KNN | 99.83% | 0.9983 |
+| SVM | 99.83% | 0.9983 |
+| Random Forest | **100.00%** | **1.0000** |
+| Multi-Layer Perceptron (Best) | **100.00%** | **1.0000** |
+| XGBoost | 99.83% | 0.9983 |
 
----
-
-## 📄 Actual Resume Metrics Report (`reports/resume_metrics.txt`)
-
-```text
-==================================================
-ACTUAL RESUME METRICS - GESTURE CONTROL ML SYSTEM
-==================================================
-Best Model Selected: Multi-Layer Perceptron
-Accuracy: 100.00%
-Macro F1-Score: 1.0000
-Weighted F1-Score: 1.0000
-Inference Latency: 0.004 ms / sample
-Gesture Classes: 3 (ACCELERATE, BRAKE, NEUTRAL)
-Total Samples Analyzed: 2500
-Engineered Features: 90 features (relative coords, finger distances, angles, tilt)
-Cross-Validation: 5-Fold Stratified K-Fold CV
-==================================================
-```
-
----
-
-## 💼 Resume-Ready Project Description
-
-**Real-Time Computer Vision & Hand Gesture Recognition ML System for Game Control**
-- Designed and deployed an end-to-end computer vision and machine learning pipeline in Python using OpenCV and MediaPipe to track 21 3D hand landmarks for real-time game control.
-- Engineered 90 spatial and temporal features—including wrist-translated coordinates, inter-fingertip Euclidean distances, finger joint angles, and palm tilt orientation—achieving translation and scale invariance.
-- Benchmark-tested candidate ML models (KNN, SVM, Random Forest, MLP, XGBoost) using 5-Fold Stratified Cross-Validation; selected Multi-Layer Perceptron achieving 100.00% weighted F1-score with 0.004 ms inference latency.
-- Implemented a 5-frame temporal sliding-window voting mechanism and confidence threshold fallback (<0.65 to NEUTRAL) to eliminate gesture flickering, coupled with an interactive Streamlit analytics dashboard tracking session telemetry.
-
----
 
 ## ⚠️ Limitations & Future Improvements
 
-1. **Extreme Lighting & Occlusion:** MediaPipe tracking accuracy can degrade under extreme low-light conditions or severe self-occlusion. Future work includes integrating depth sensor data.
+1. **Extreme Lighting & Occlusion:** MediaPipe tracking accuracy can degrade under extreme low-light conditions or severe self-occlusion. Future work could include integrating depth sensor data.
 2. **Two-Handed Controls:** Current implementation tracks 1 primary hand. Extending to two-handed multi-gesture tracking will enable simultaneous steering and braking.
-3. **Adaptive Thresholding:** Implementing online dynamic confidence thresholds based on user movement speed.
+3. **Adaptive Thresholding:** Future versions could implement dynamic confidence thresholds based on runtime conditions and user behavior.
