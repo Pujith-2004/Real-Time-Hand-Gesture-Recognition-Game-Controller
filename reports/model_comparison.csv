@@ -1,0 +1,6 @@
+Model,Accuracy,Macro_Precision,Macro_Recall,Macro_F1,Weighted_Precision,Weighted_Recall,Weighted_F1,CV_F1_Mean,Latency_ms_per_sample
+K-Nearest Neighbors,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9975,0.019
+Support Vector Machine,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.0134
+Random Forest,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.9992,0.007
+Multi-Layer Perceptron,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.9996,0.001
+XGBoost,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.9983,0.0015

@@ -1,0 +1,14 @@
+========================================
+EXPLORATORY DATA ANALYSIS REPORT
+========================================
+Total Samples: 2500
+Missing Values: 0
+Duplicate Samples: 0
+Engineered Features: 90
+
+Class Distribution:
+  - ACCELERATE: 500 (20.0%)
+  - BRAKE: 500 (20.0%)
+  - TILT_LEFT: 500 (20.0%)
+  - TILT_RIGHT: 500 (20.0%)
+  - NEUTRAL: 500 (20.0%)

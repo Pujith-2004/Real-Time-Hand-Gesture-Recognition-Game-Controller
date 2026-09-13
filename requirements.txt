@@ -1,0 +1,28 @@
+# Core Computer Vision & Hand Tracking
+# Pinned legacy MediaPipe stack for mp.solutions.hands
+mediapipe==0.10.21
+opencv-contrib-python==4.10.0.84
+protobuf==4.25.3
+
+# Numerical & Data
+numpy==1.26.4
+pandas==2.2.3
+pytz>=2024.1
+python-dateutil>=2.8.2
+
+# Machine Learning
+scikit-learn==1.5.2
+xgboost==2.1.4
+scipy==1.13.1
+
+# Visualization & Dashboard
+matplotlib==3.9.4
+seaborn==0.13.2
+streamlit>=1.40.0,<1.45.0
+
+# Config & Utilities
+pyyaml>=6.0
+pynput>=1.7.6
+
+# Testing
+pytest>=7.4.0
