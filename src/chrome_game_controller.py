@@ -9,6 +9,7 @@ Gestures:
     NEUTRAL    -> release keys
 """
 
+from src import gesture_predictor
 import json
 import time
 
@@ -23,8 +24,8 @@ class ChromeGameController:
         self,
         port=9222,
         stable_frames=1,
-        brake_pulse_ms=40,
-        brake_cooldown_ms=180,
+        brake_pulse_ms=120,
+        brake_cooldown_ms=80,
     ):
         self.port = port
         self.websocket = None
@@ -39,16 +40,7 @@ class ChromeGameController:
         self.pending_count = 0
         self.active_gesture = None
 
-        # Gradual braking
-        self.brake_pulse_seconds = max(
-            0.01,
-            brake_pulse_ms / 1000.0
-        )
-        self.brake_cooldown_seconds = max(
-            0.0,
-            brake_cooldown_ms / 1000.0
-        )
-        self.last_brake_time = 0.0
+        
 
     def connect(self):
         """Connect to the Hill Climb Racing tab."""
@@ -151,32 +143,7 @@ class ChromeGameController:
         if self.current_key == key:
             self.current_key = None
 
-    def _brake_pulse(self):
-        """Apply a short brake pulse."""
-
-        now = time.monotonic()
-
-        if (
-            now - self.last_brake_time
-            < self.brake_cooldown_seconds
-        ):
-            return
-
-        self._send_key(
-            "keyDown",
-            "ArrowLeft",
-            37,
-        )
-
-        time.sleep(self.brake_pulse_seconds)
-
-        self._send_key(
-            "keyUp",
-            "ArrowLeft",
-            37,
-        )
-
-        self.last_brake_time = time.monotonic()
+    
 
     def update_action(self, gesture, tilt_angle=0.0):
         """Convert gesture into game control."""
@@ -208,11 +175,7 @@ class ChromeGameController:
 
         # BRAKE
         elif gesture == "BRAKE":
-            # Release acceleration first.
-            if self.current_key == "right":
-                self.release("right")
-
-            self._brake_pulse()
+            self.press("left")
             self.active_gesture = "BRAKE"
 
         # NEUTRAL
@@ -221,7 +184,6 @@ class ChromeGameController:
                 self.release(self.current_key)
 
             self.active_gesture = "NEUTRAL"
-            self.last_brake_time = 0.0
 
             return None
 
@@ -237,7 +199,7 @@ class ChromeGameController:
         self.pending_gesture = None
         self.pending_count = 0
         self.active_gesture = None
-        self.last_brake_time = 0.0
+        
 
     def close(self):
         """Release keys and close Chrome connection."""

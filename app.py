@@ -172,6 +172,15 @@ def run_application(config_path: str = "config/config.yaml"):
     fps = 30.0
     prev_frame_time = time.time()
 
+    # -------------------------------------------------
+    # Create display windows once
+    # -------------------------------------------------
+
+    cv2.namedWindow("Gesture Control HUD", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Gesture Control HUD", 480, 360)
+
+    cv2.namedWindow("2D Hill Climb Game Simulator", cv2.WINDOW_NORMAL)
+
     try:
 
         while True:
@@ -395,6 +404,7 @@ def run_application(config_path: str = "config/config.yaml"):
             # -------------------------------------------------
             # Display
             # -------------------------------------------------
+            
 
             cv2.imshow(
                 "Gesture Control HUD",
