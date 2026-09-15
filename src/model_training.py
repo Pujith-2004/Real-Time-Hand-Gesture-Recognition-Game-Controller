@@ -153,11 +153,20 @@ class ModelTrainer:
 
             logger.info(f"[{name}] Test Acc: {test_acc:.4f} | Test F1: {test_f1:.4f} | Latency: {latency_ms_per_sample:.4f} ms")
 
-        # 6. Select Best Model (Primary metric: Test F1 score, secondary: latency)
-        best_name = max(results.keys(), key=lambda k: (results[k]["test_f1_weighted"], -results[k]["latency_ms_per_sample"]))
+        # 6. Select Best Model using cross-validation performance
+        best_name = max(
+            results.keys(),
+            key=lambda k: (
+                results[k]["cv_f1_mean"],
+                -results[k]["latency_ms_per_sample"]
+            )
+        )
         best_model_info = results[best_name]
 
-        logger.info(f"🏆 Best Model Selected: '{best_name}' with F1-Score={best_model_info['test_f1_weighted']:.4f}")
+        logger.info(
+            f"🏆 Best Model Selected: '{best_name}' "
+            f"with CV F1-Score={best_model_info['cv_f1_mean']:.4f}"
+        )
 
         return {
             "results": results,
