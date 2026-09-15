@@ -6,7 +6,7 @@ An end-to-end Computer Vision and Machine Learning system that captures 21 3D ha
 
 ## 📌 Problem Statement
 
-Traditional keyboard-based gaming controls can be limiting or unintuitive for certain interactive arcade games such as *Hill Climb Racing*. While raw MediaPipe demos demonstrate landmark visualization, they lack robust machine learning pipelines, feature engineering, latency optimization, confidence safety thresholds, and gameplay telemetry analytics. This project builds an end-to-end ML pipeline that translates real-time hand gestures into responsive, safe, and logged vehicle controls.
+Traditional keyboard-based gaming controls can be limiting or unintuitive for certain interactive arcade games such as *Hill Climb Racing*. While raw MediaPipe demos demonstrate landmark visualization, While raw MediaPipe demos demonstrate landmark visualization, they lack robust machine learning pipelines, feature engineering, real-time inference, confidence safety handling, and gameplay telemetry analytics. This project builds an end-to-end ML pipeline that translates real-time hand gestures into responsive, safe, and logged vehicle controls.
 
 ---
 
@@ -138,7 +138,7 @@ Ensure Python 3.11 is installed on Windows.
 py -3.11 -m venv .venv
 
 # Activate virtual environment (Windows PowerShell)
-.\venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 
 # Install requirements
 py -3.11 -m pip install -r requirements.txt
@@ -174,11 +174,40 @@ python train.py
 ```
 This script trains KNN, SVM, Random Forest, Multi-Layer Perceptron, and XGBoost, evaluates their performance, saves the best model to `models/best_model.pkl`, and exports reports to `reports/`.
 
+### Browser Game Setup
+
+The browser controller uses Chrome DevTools Protocol (CDP) to send keyboard events to the game.
+
+1. Close existing Chrome instances.
+2. Launch Chrome with remote debugging enabled:
+
+```powershell
+taskkill /F /IM chrome.exe
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --remote-allow-origins=* --user-data-dir="$env:TEMP\HCRChrome"
+
 ### Step 4: Run Real-Time Gesture Control Application
 ```powershell
 python app.py
 ```
 Captures hand gestures in real time, displays the webcam HUD with landmarks, predicted gesture, confidence score, and FPS, and sends the corresponding keyboard input to the game controller. The application also supports the integrated 2D vehicle simulator for local testing. Press `Q` or `ESC` to quit safely.
+
+#### Gesture Controls
+
+| Gesture | Game Action |
+| :--- | :--- |
+| `ACCELERATE` | Hold `ArrowRight` continuously |
+| `BRAKE` | Hold `ArrowLeft` continuously for deceleration/reverse |
+| `NEUTRAL` | Release movement keys |
+
+## 🎥 Demo
+
+The demo shows the complete real-time gesture-control pipeline using a webcam and the browser-based Hill Climb Racing game.
+
+- `ACCELERATE` → continuously holds `ArrowRight`
+- `BRAKE` → continuously holds `ArrowLeft` for deceleration/reverse
+- `NEUTRAL` → releases movement keys
+- Real-time gesture prediction, confidence, and FPS are displayed in the HUD
+- All three gesture classes and their corresponding in-game actions are demonstrated
 
 ### Step 5: Launch Streamlit Performance Analytics Dashboard
 ```powershell
