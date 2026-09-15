@@ -88,7 +88,6 @@ def collect_data(gesture: str, num_samples: int = 1000, config_path: str = "conf
     samples_collected_session = 0
     buffer = []
 
-    last_save_time = time.time()
 
     try:
         while True:
