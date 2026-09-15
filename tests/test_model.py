@@ -41,7 +41,7 @@ def test_model_training_and_artifacts(setup_dataset_and_model):
     info = setup_dataset_and_model
     assert os.path.exists(info["model_path"])
     assert os.path.exists(info["preprocessor_path"])
-    assert len(info["classes"]) == 5
+    assert len(info["classes"]) == 3
 
 
 def test_gesture_predictor_inference(setup_dataset_and_model):

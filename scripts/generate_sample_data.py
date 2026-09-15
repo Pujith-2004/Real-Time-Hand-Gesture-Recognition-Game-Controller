@@ -1,6 +1,6 @@
 """
 Synthetic Sample Dataset Generator for Hand Gestures.
-Generates geometrically realistic 21-landmark 3D data for all 5 gesture classes
+Generates geometrically realistic 21-landmark 3D data for all 3 gesture classes
 to bootstrap model training, evaluation, and test suites.
 """
 
@@ -140,7 +140,7 @@ def generate_dataset(samples_per_class: int = 500, output_path: str = "data/raw/
     np.random.seed(seed)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    gestures = ["ACCELERATE", "BRAKE", "TILT_LEFT", "TILT_RIGHT", "NEUTRAL"]
+    gestures = ["ACCELERATE", "BRAKE", "NEUTRAL"]
     cols = get_csv_columns()
     rows = []
 
