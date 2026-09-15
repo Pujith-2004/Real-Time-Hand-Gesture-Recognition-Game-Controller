@@ -9,6 +9,8 @@ import os
 import sys
 import time
 import logging
+# Add project root to sys.path
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 import cv2
 import yaml
@@ -20,8 +22,7 @@ from src.game_simulator import VehicleSimulator
 from src.telemetry import TelemetryLogger
 
 
-# Add project root to sys.path
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 
 
 logging.basicConfig(
