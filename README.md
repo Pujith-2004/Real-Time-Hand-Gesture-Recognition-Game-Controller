@@ -201,6 +201,8 @@ Captures hand gestures in real time, displays the webcam HUD with landmarks, pre
 
 ## 🎥 Demo
 
+[▶️ Watch the full project demo](https://github.com/user-attachments/assets/f6b923c7-0815-4e4c-be18-df2210d6cce8)
+
 The demo shows the complete real-time gesture-control pipeline using a webcam and the browser-based Hill Climb Racing game.
 
 - `ACCELERATE` → continuously holds `ArrowRight`
