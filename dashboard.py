@@ -107,7 +107,7 @@ else:
 
             with c2:
                 if os.path.exists(cm_path):
-                    st.image(cm_path, caption="Best Model Confusion Matrix", use_column_width=True)
+                    st.image(cm_path, caption="Best Model Confusion Matrix", use_container_width=True)
         else:
             st.info("Run `python train.py` to generate model comparison benchmarks.")
 
