@@ -1,7 +1,7 @@
 """
 Model Evaluation and Metrics Reporting Module.
 Computes evaluation metrics (Accuracy, Precision, Recall, F1-score),
-confusion matrices, comparison charts, and exports resume metrics.
+confusion matrices, and model comparison charts.
 """
 
 import os
@@ -82,29 +82,6 @@ class ModelEvaluator:
 
         # Plot Model Comparison Bar Chart
         self._plot_model_comparison(df_comparison)
-
-        # Generate Resume Metrics TXT file
-        best_row = df_comparison[df_comparison["Model"] == best_model_name].iloc[0]
-        resume_txt = (
-            f"==================================================\n"
-            f"ACTUAL RESUME METRICS - GESTURE CONTROL ML SYSTEM\n"
-            f"==================================================\n"
-            f"Best Model Selected: {best_model_name}\n"
-            f"Accuracy: {best_row['Accuracy']*100:.2f}%\n"
-            f"Macro F1-Score: {best_row['Macro_F1']:.4f}\n"
-            f"Weighted F1-Score: {best_row['Weighted_F1']:.4f}\n"
-            f"Inference Latency: {best_row['Latency_ms_per_sample']:.3f} ms / sample\n"
-            f"Gesture Classes: {len(classes)} ({', '.join(classes)})\n"
-            f"Total Samples Analyzed: {total_samples}\n"
-            f"Engineered Features: 90 features (relative coords, finger distances, angles, tilt)\n"
-            f"Cross-Validation: 5-Fold Stratified K-Fold CV\n"
-            f"==================================================\n"
-        )
-
-        resume_path = os.path.join(self.reports_dir, "resume_metrics.txt")
-        with open(resume_path, "w") as f:
-            f.write(resume_txt)
-        logger.info(f"Resume metrics saved to {resume_path}")
 
         return df_comparison
 
