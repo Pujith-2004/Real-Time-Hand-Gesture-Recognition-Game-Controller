@@ -5,7 +5,7 @@ Controls Hill Climb Racing through Chrome DevTools Protocol (CDP).
 
 Gestures:
     ACCELERATE -> ArrowRight held
-    BRAKE      -> gradual ArrowLeft pulses
+    BRAKE      -> ArrowLeft held
     NEUTRAL    -> release keys
 """
 
@@ -24,8 +24,6 @@ class ChromeGameController:
         self,
         port=9222,
         stable_frames=1,
-        brake_pulse_ms=120,
-        brake_cooldown_ms=80,
     ):
         self.port = port
         self.websocket = None
