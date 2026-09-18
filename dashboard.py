@@ -33,7 +33,7 @@ summary = analyzer.get_summary()
 
 # Sidebar controls
 st.sidebar.header("Configuration & Actions")
-st.sidebar.info("Dashboard auto-refreshes when new telemetry is logged.")
+st.sidebar.info("Click Refresh Data to load the latest telemetry.")
 
 if st.sidebar.button("🔄 Refresh Data"):
     st.rerun()
